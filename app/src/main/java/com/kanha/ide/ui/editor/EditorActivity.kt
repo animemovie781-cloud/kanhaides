@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kanha.ide.R
+import com.kanha.ide.ui.build.BuildOutputBottomSheet
+import com.kanha.ide.ui.build.BuildViewModel
 import com.kanha.ide.ui.explorer.FileExplorerFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,14 +22,19 @@ class EditorActivity : AppCompatActivity() {
     private lateinit var rvEditorTabs: RecyclerView
     private lateinit var tabAdapter: EditorTabAdapter
     private lateinit var viewModel: EditorViewModel
+    private lateinit var buildViewModel: BuildViewModel
+    
+    private var currentProjectPath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
 
         viewModel = androidx.lifecycle.ViewModelProvider(this)[EditorViewModel::class.java]
+        buildViewModel = androidx.lifecycle.ViewModelProvider(this)[BuildViewModel::class.java]
 
-        val projectPath = intent.getStringExtra("PROJECT_PATH") ?: return finish()
+        currentProjectPath = intent.getStringExtra("PROJECT_PATH")
+        if (currentProjectPath == null) return finish()
 
         drawerLayout = findViewById(R.id.drawerLayout)
         rvEditorTabs = findViewById(R.id.rvEditorTabs)
@@ -49,7 +56,7 @@ class EditorActivity : AppCompatActivity() {
         setupTabs()
 
         if (savedInstanceState == null) {
-            val explorerFragment = FileExplorerFragment.newInstance(projectPath)
+            val explorerFragment = FileExplorerFragment.newInstance(currentProjectPath!!)
             supportFragmentManager.beginTransaction()
                 .replace(R.id.explorerContainer, explorerFragment)
                 .commit()
@@ -98,6 +105,13 @@ class EditorActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val fragment = supportFragmentManager.findFragmentById(R.id.editorContainer) as? EditorFragment
         return when (item.itemId) {
+            R.id.action_build -> {
+                currentProjectPath?.let {
+                    val bottomSheet = BuildOutputBottomSheet.newInstance(it)
+                    bottomSheet.show(supportFragmentManager, "BuildOutputBottomSheet")
+                }
+                true
+            }
             R.id.action_undo -> { fragment?.undo(); true }
             R.id.action_redo -> { fragment?.redo(); true }
             R.id.action_save -> { fragment?.saveFile(); true }
