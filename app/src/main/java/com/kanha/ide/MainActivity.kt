@@ -66,19 +66,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSampleProjects() {
-        allProjects.addAll(
-            listOf(
-                Project(1, "kanha", "NewProject23", "1.0", 1, "com.my.newproject23", 790),
-                Project(2, "jc", "NewProject22", "1.0", 1, "com.my.newproject22", 789),
-                Project(3, "new", "NewProject21", "1.0", 1, "com.my.newproject21", 788),
-                Project(4, "kanha", "NewProject19", "1.0", 1, "com.my.newproject19", 787),
-                Project(5, "kanah", "NewProject18", "1.0", 1, "com.my.newproject18", 786),
-                Project(6, "Ystudio", "YstudioProject", "1.0", 1, "com.yuvextech.Ystudio", 785),
-                Project(7, "TestApp", "NewProject17", "1.0", 1, "com.my.newproject17", 784),
-                Project(8, "MyGame", "GameProject01", "2.0", 3, "com.my.gameproject01", 783),
-            )
-        )
+        val localProjects = com.kanha.ide.project.ProjectManager.getLocalProjects(this)
+        
+        if (localProjects.isEmpty()) {
+            // Optional: load some dummy data if empty for demo purposes, 
+            // but since it's an IDE, it's better to show an empty state.
+            // For now, let's just clear and show empty list.
+            allProjects.clear()
+        } else {
+            allProjects.clear()
+            allProjects.addAll(localProjects)
+        }
 
+        filteredProjects.clear()
         filteredProjects.addAll(allProjects)
         projectAdapter.notifyDataSetChanged()
     }

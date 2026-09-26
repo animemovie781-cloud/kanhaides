@@ -7,7 +7,8 @@ data class Project(
     val version: String,
     val versionCode: Int,
     val packageName: String,
-    val badgeNumber: Int
+    val badgeNumber: Int,
+    val path: String = ""
 ) {
     /** Returns formatted details string like "NewProject23 - 1.0 (1)" */
     val detailsText: String
