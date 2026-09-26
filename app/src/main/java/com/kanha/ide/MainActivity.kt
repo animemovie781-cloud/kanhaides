@@ -50,8 +50,9 @@ class MainActivity : AppCompatActivity() {
         projectAdapter = ProjectAdapter(
             filteredProjects,
             onItemClick = { project ->
-                Toast.makeText(this, "Opening ${project.name}...", Toast.LENGTH_SHORT).show()
-                // TODO: Navigate to project editor
+                val intent = android.content.Intent(this, com.kanha.ide.ui.editor.EditorActivity::class.java)
+                intent.putExtra("PROJECT_PATH", project.path)
+                startActivity(intent)
             },
             onDropdownClick = { project, view ->
                 showProjectOptionsMenu(project, view)

@@ -30,6 +30,10 @@
             android:name=".ui.ProjectDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.KanhaIDE" />
+            
+        <activity 
+            android:name=".ui.editor.EditorActivity"
+            android:theme="@style/Theme.KanhaIDE" />
 
     </application>
 
