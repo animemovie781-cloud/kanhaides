@@ -5,10 +5,11 @@ import java.io.File
 class SdkManager(private val customSdkPath: String? = null) {
 
     fun getSdkRoot(): File? {
+        // In a real Android IDE, the SDK (android.jar, aapt2, d8, etc.) is usually downloaded 
+        // to the app's internal storage or extracted from assets.
         val pathsToTry = listOfNotNull(
             customSdkPath,
-            System.getenv("ANDROID_SDK_ROOT"),
-            System.getenv("ANDROID_HOME")
+            "/storage/emulated/0/KanhaIDE/sdk" // A common public folder for users to place SDK files
         )
 
         for (path in pathsToTry) {

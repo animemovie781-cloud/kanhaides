@@ -14,7 +14,8 @@ class Aapt2Compiler(
     suspend fun compile(): Boolean {
         val aapt2 = sdkManager.getAapt2()
         if (aapt2 == null || !aapt2.exists()) {
-            logger.error("Required Android build tool is not installed: aapt2")
+            logger.error("Required Android build tool is missing: aapt2")
+            logger.error("To build on a phone, you must place ARM64 binaries (aapt2, d8, etc.) and android.jar in: /storage/emulated/0/KanhaIDE/sdk/build-tools/34.0.0/")
             return false
         }
         
