@@ -74,4 +74,49 @@ class FileExplorerViewModel : ViewModel() {
         }
         return count
     }
+
+    fun refreshNode(node: FileNode) {
+        viewModelScope.launch {
+            // Find parent to refresh, or root if it's top level
+            // For simplicity, let's just refresh the entire tree or the specific node's children
+            if (node.isDirectory && node.isExpanded) {
+                val newChildren = repository.listChildren(node.file, node.depth + 1)
+                node.children = newChildren
+            }
+            // Trigger flow update
+            _fileTree.value = _fileTree.value.toList()
+        }
+    }
+
+    fun refreshAll() {
+        viewModelScope.launch {
+            // Re-fetch root nodes
+            val path = rootNodes.firstOrNull()?.file?.parent ?: return@launch
+            initProjectRoot(path)
+        }
+    }
+
+    fun createFile(parent: File, name: String, onSuccess: () -> Unit, onError: () -> Unit) {
+        viewModelScope.launch {
+            if (repository.createFile(parent, name)) onSuccess() else onError()
+        }
+    }
+
+    fun createDirectory(parent: File, name: String, onSuccess: () -> Unit, onError: () -> Unit) {
+        viewModelScope.launch {
+            if (repository.createDirectory(parent, name)) onSuccess() else onError()
+        }
+    }
+
+    fun renameFile(file: File, newName: String, onSuccess: () -> Unit, onError: () -> Unit) {
+        viewModelScope.launch {
+            if (repository.rename(file, newName)) onSuccess() else onError()
+        }
+    }
+
+    fun deleteFile(file: File, onSuccess: () -> Unit, onError: () -> Unit) {
+        viewModelScope.launch {
+            if (repository.delete(file)) onSuccess() else onError()
+        }
+    }
 }

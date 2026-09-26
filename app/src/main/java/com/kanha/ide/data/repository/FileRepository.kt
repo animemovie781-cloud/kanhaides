@@ -34,4 +34,36 @@ class FileRepository(private val projectRoot: String) {
         val canonicalTarget = file.canonicalPath
         return canonicalTarget.startsWith(canonicalRoot)
     }
+
+    suspend fun createFile(parent: File, name: String): Boolean = withContext(Dispatchers.IO) {
+        val newFile = File(parent, name)
+        if (!isSafePath(newFile)) return@withContext false
+        try {
+            newFile.createNewFile()
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun createDirectory(parent: File, name: String): Boolean = withContext(Dispatchers.IO) {
+        val newDir = File(parent, name)
+        if (!isSafePath(newDir)) return@withContext false
+        newDir.mkdirs()
+    }
+
+    suspend fun rename(file: File, newName: String): Boolean = withContext(Dispatchers.IO) {
+        if (!isSafePath(file)) return@withContext false
+        val newFile = File(file.parentFile, newName)
+        if (!isSafePath(newFile)) return@withContext false
+        file.renameTo(newFile)
+    }
+
+    suspend fun delete(file: File): Boolean = withContext(Dispatchers.IO) {
+        if (!isSafePath(file)) return@withContext false
+        if (file.isDirectory) {
+            file.deleteRecursively()
+        } else {
+            file.delete()
+        }
+    }
 }

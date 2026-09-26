@@ -84,7 +84,7 @@ class FileExplorerFragment : Fragment(), FileExplorerListener {
     }
 
     override fun onFileLongClick(node: FileNode, view: View) {
-        Toast.makeText(context, "Long Clicked: ${node.name}", Toast.LENGTH_SHORT).show()
-        // TODO: Show BottomSheet/ContextMenu for File Operations (Phase 5)
+        val bottomSheet = FileActionBottomSheet(node, viewModel)
+        bottomSheet.show(parentFragmentManager, "FileActionBottomSheet")
     }
 }
