@@ -79,12 +79,34 @@ class EditorFragment : Fragment() {
                 
                 withContext(Dispatchers.Main) {
                     codeEditor.setText(content)
+                    setupSyntaxHighlighting(file.name)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(context, "Failed to load file", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+    
+    private fun setupSyntaxHighlighting(fileName: String) {
+        val extension = fileName.substringAfterLast('.', "").lowercase()
+        try {
+            when (extension) {
+                "java", "kt", "kts" -> {
+                    // Using JavaLanguage as syntax highlighting for Java and Kotlin
+                    codeEditor.setEditorLanguage(io.github.rosemoe.sora.langs.java.JavaLanguage())
+                }
+                "xml" -> {
+                    // XML highlighting (requires textmate or basic support).
+                    // As of now, we will leave it as default or use Java if it provides some basic bracket coloring.
+                }
+                else -> {
+                    // Default plain text
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
     

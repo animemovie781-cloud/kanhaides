@@ -48,4 +48,6 @@ dependencies {
     
     // Sora Editor
     implementation("io.github.Rosemoe.sora-editor:editor:0.23.2")
+    implementation("io.github.Rosemoe.sora-editor:language-java:0.23.2")
+    implementation("io.github.Rosemoe.sora-editor:language-textmate:0.23.2")
 }
