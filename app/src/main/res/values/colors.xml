@@ -4,4 +4,20 @@
     <color name="surface_dark">#1E1E1E</color>
     <color name="android_green">#3DDC84</color>
     <color name="accent_blue">#1F6FEB</color>
+    <color name="accent_blue_light">#58A6FF</color>
+    <color name="text_primary">#E0E0E0</color>
+    
+    <!-- Added missing colors -->
+    <color name="badge_bg">#FF5252</color>
+    <color name="bottom_nav_active">#3DDC84</color>
+    <color name="bottom_nav_inactive">#757575</color>
+    <color name="card_dark">#2C2C2C</color>
+    <color name="divider_dark">#333333</color>
+    <color name="restore_card_bg">#331A1A</color>
+    <color name="restore_card_stroke">#4DFF5252</color>
+    <color name="ripple_color">#33FFFFFF</color>
+    <color name="surface_elevated">#252525</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_secondary">#B3B3B3</color>
+    <color name="text_tertiary">#808080</color>
 </resources>
