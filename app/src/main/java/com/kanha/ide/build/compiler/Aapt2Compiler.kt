@@ -3,23 +3,23 @@ package com.kanha.ide.build.compiler
 import com.kanha.ide.build.core.BuildLogger
 import com.kanha.ide.build.core.BuildProcess
 import com.kanha.ide.build.model.BuildConfig
-import com.kanha.ide.build.tool.SdkManager
+import com.kanha.ide.build.tool.BuildToolsManager
 import java.io.File
 
 class Aapt2Compiler(
     private val config: BuildConfig,
-    private val sdkManager: SdkManager,
+    private val buildToolsManager: BuildToolsManager,
     private val logger: BuildLogger
 ) {
     suspend fun compile(): Boolean {
-        val aapt2 = sdkManager.getAapt2()
+        val aapt2 = buildToolsManager.getAapt2()
         if (aapt2 == null || !aapt2.exists()) {
             logger.error("Required Android build tool is missing: aapt2")
             logger.error("To build on a phone, you must place ARM64 binaries (aapt2, d8, etc.) and android.jar in: /storage/emulated/0/KanhaIDE/sdk/build-tools/34.0.0/")
             return false
         }
         
-        val androidJar = sdkManager.getAndroidJar(config.compileSdk)
+        val androidJar = buildToolsManager.getAndroidJar()
         if (androidJar == null || !androidJar.exists()) {
             logger.error("Required Android SDK component missing: android.jar for API ${config.compileSdk}")
             return false

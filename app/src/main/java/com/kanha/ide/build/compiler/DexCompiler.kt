@@ -3,16 +3,16 @@ package com.kanha.ide.build.compiler
 import com.kanha.ide.build.core.BuildLogger
 import com.kanha.ide.build.core.BuildProcess
 import com.kanha.ide.build.model.BuildConfig
-import com.kanha.ide.build.tool.SdkManager
+import com.kanha.ide.build.tool.BuildToolsManager
 import java.io.File
 
 class DexCompiler(
     private val config: BuildConfig,
-    private val sdkManager: SdkManager,
+    private val buildToolsManager: BuildToolsManager,
     private val logger: BuildLogger
 ) {
     suspend fun compile(): Boolean {
-        val d8 = sdkManager.getD8()
+        val d8 = buildToolsManager.getD8Jar()
         if (d8 == null || !d8.exists()) {
             logger.error("Required Android build tool is not installed: d8")
             return false
@@ -32,9 +32,10 @@ class DexCompiler(
         }
 
         val args = mutableListOf(
-            d8.absolutePath,
+            "java",
+            "-jar", d8.absolutePath,
             "--output", dexOutDir.absolutePath,
-            "--lib", sdkManager.getAndroidJar(config.compileSdk)!!.absolutePath
+            "--lib", buildToolsManager.getAndroidJar().absolutePath
         )
         args.addAll(classFiles)
         

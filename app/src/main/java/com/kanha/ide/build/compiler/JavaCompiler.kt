@@ -3,19 +3,19 @@ package com.kanha.ide.build.compiler
 import com.kanha.ide.build.core.BuildLogger
 import com.kanha.ide.build.core.BuildProcess
 import com.kanha.ide.build.model.BuildConfig
-import com.kanha.ide.build.tool.SdkManager
+import com.kanha.ide.build.tool.BuildToolsManager
 import java.io.File
 
 class JavaCompiler(
     private val config: BuildConfig,
-    private val sdkManager: SdkManager,
+    private val buildToolsManager: BuildToolsManager,
     private val logger: BuildLogger
 ) {
     suspend fun compile(): Boolean {
         // Find javac on system PATH or internal tools
         val javac = "javac" // Assuming javac is in PATH for now, real IDE would bundle or find it
         
-        val androidJar = sdkManager.getAndroidJar(config.compileSdk)
+        val androidJar = buildToolsManager.getAndroidJar()
         if (androidJar == null || !androidJar.exists()) {
             logger.error("Required Android SDK component missing: android.jar")
             return false

@@ -8,7 +8,7 @@ import com.kanha.ide.build.engine.BuildManager
 import com.kanha.ide.build.model.BuildConfig
 import com.kanha.ide.build.model.BuildResult
 import com.kanha.ide.build.model.BuildState
-import com.kanha.ide.build.tool.SdkManager
+import com.kanha.ide.build.tool.BuildToolsManagerImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class BuildViewModel(application: Application) : AndroidViewModel(application) {
-    private val sdkManager = SdkManager(application.filesDir.absolutePath + "/sdk")
+    private val buildToolsManager = BuildToolsManagerImpl(application)
     private val buildLogger = BuildLogger()
-    private val buildManager = BuildManager(sdkManager, buildLogger)
+    private val buildManager = BuildManager(buildToolsManager, buildLogger)
 
     private val _buildState = MutableStateFlow(BuildState.IDLE)
     val buildState: StateFlow<BuildState> = _buildState.asStateFlow()
@@ -41,6 +41,12 @@ class BuildViewModel(application: Application) : AndroidViewModel(application) {
         _logs.value = ""
         _buildResult.value = null
         _buildState.value = BuildState.PREPARING
+
+        if (!buildToolsManager.isInstalled()) {
+            _buildState.value = BuildState.FAILED
+            _logs.value = "Error: Android Build Tools are not installed! Please restart the app and complete the setup."
+            return
+        }
 
         val config = BuildConfig(
             projectRoot = File(projectPath),

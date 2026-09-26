@@ -6,7 +6,7 @@ import com.kanha.ide.build.model.BuildArtifact
 import com.kanha.ide.build.model.BuildConfig
 import com.kanha.ide.build.model.BuildResult
 import com.kanha.ide.build.model.BuildState
-import com.kanha.ide.build.tool.SdkManager
+import com.kanha.ide.build.tool.BuildToolsManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ import java.io.File
 
 class LightweightBuildEngine(
     private val config: BuildConfig,
-    private val sdkManager: SdkManager,
+    private val buildToolsManager: BuildToolsManager,
     private val logger: BuildLogger
 ) {
     private val _state = MutableStateFlow(BuildState.IDLE)
@@ -34,56 +34,14 @@ class LightweightBuildEngine(
             
             // Clean/setup dirs
             val buildDir = File(config.projectRoot, "build")
-            // Not doing full clean here, just ensuring outputs exist
             buildDir.mkdirs()
 
             if (isCancelled) return@withContext result(false, "Cancelled", startTime)
 
             _state.value = BuildState.COMPILING_RESOURCES
             logger.log("[1/6] Compiling resources...")
-            val aapt2 = sdkManager.getAapt2()
-            if (aapt2 == null || !aapt2.exists()) {
-                logger.log("[SIMULATION MODE] Required build tools (aapt2, d8, android.jar) are missing from /storage/emulated/0/KanhaIDE/sdk/")
-                logger.log("[SIMULATION MODE] Simulating a successful build process for UI testing...")
-                
-                // Simulate build steps
-                kotlinx.coroutines.delay(1000)
-                logger.log("[2/6] Compiling Java/Kotlin... (Simulated)")
-                _state.value = BuildState.COMPILING_JAVA
-                kotlinx.coroutines.delay(1200)
-                
-                logger.log("[3/6] Converting classes to DEX... (Simulated)")
-                _state.value = BuildState.DEXING
-                kotlinx.coroutines.delay(1500)
-                
-                logger.log("[4/6] Packaging APK... (Simulated)")
-                _state.value = BuildState.PACKAGING
-                kotlinx.coroutines.delay(800)
-                
-                logger.log("[5/6] Aligning APK... (Simulated)")
-                _state.value = BuildState.ALIGNING
-                kotlinx.coroutines.delay(500)
-                
-                logger.log("[6/6] Signing APK... (Simulated)")
-                _state.value = BuildState.SIGNING
-                kotlinx.coroutines.delay(1000)
-
-                _state.value = BuildState.SUCCESS
-                logger.log("BUILD SUCCESSFUL (SIMULATED)")
-                
-                // Create a dummy APK file so the UI can find it for testing the install flow
-                val dummyApk = File(config.projectRoot, "build/outputs/apk/app-debug.apk")
-                dummyApk.parentFile?.mkdirs()
-                if (!dummyApk.exists()) {
-                    dummyApk.writeText("Dummy simulated APK content")
-                }
-                
-                return@withContext result(true, "Simulated build successful", startTime, listOf(
-                    BuildArtifact(com.kanha.ide.build.model.ArtifactType.APK_DEBUG, dummyApk)
-                ))
-            }
             
-            if (!Aapt2Compiler(config, sdkManager, logger).compile()) {
+            if (!Aapt2Compiler(config, buildToolsManager, logger).compile()) {
                 return@withContext result(false, "Failed to compile resources", startTime)
             }
 
@@ -91,10 +49,10 @@ class LightweightBuildEngine(
 
             _state.value = BuildState.COMPILING_JAVA
             logger.log("[2/6] Compiling Java/Kotlin...")
-            if (!JavaCompiler(config, sdkManager, logger).compile()) {
+            if (!JavaCompiler(config, buildToolsManager, logger).compile()) {
                 return@withContext result(false, "Failed to compile Java", startTime)
             }
-            if (!KotlinCompiler(config, sdkManager, logger).compile()) {
+            if (!KotlinCompiler(config, buildToolsManager, logger).compile()) {
                 return@withContext result(false, "Failed to compile Kotlin", startTime)
             }
 
@@ -102,7 +60,7 @@ class LightweightBuildEngine(
 
             _state.value = BuildState.DEXING
             logger.log("[3/6] Converting classes to DEX...")
-            if (!DexCompiler(config, sdkManager, logger).compile()) {
+            if (!DexCompiler(config, buildToolsManager, logger).compile()) {
                 return@withContext result(false, "Failed to run D8", startTime)
             }
 
@@ -118,7 +76,7 @@ class LightweightBuildEngine(
 
             _state.value = BuildState.ALIGNING
             logger.log("[5/6] Aligning APK...")
-            if (!ZipAligner(config, sdkManager, logger).compile()) {
+            if (!ZipAligner(config, buildToolsManager, logger).compile()) {
                 return@withContext result(false, "Failed to align APK", startTime)
             }
 
@@ -126,7 +84,7 @@ class LightweightBuildEngine(
 
             _state.value = BuildState.SIGNING
             logger.log("[6/6] Signing APK...")
-            if (!ApkSigner(config, sdkManager, logger).compile()) {
+            if (!ApkSigner(config, buildToolsManager, logger).compile()) {
                 return@withContext result(false, "Failed to sign APK", startTime)
             }
 
@@ -134,6 +92,10 @@ class LightweightBuildEngine(
             logger.log("BUILD SUCCESSFUL")
             
             val finalApk = File(config.projectRoot, "build/outputs/apk/app-debug.apk")
+            if (!finalApk.exists()) {
+                return@withContext result(false, "Build completed but APK file not found at ${finalApk.absolutePath}", startTime)
+            }
+            
             return@withContext result(true, "Build successful", startTime, listOf(
                 BuildArtifact(com.kanha.ide.build.model.ArtifactType.APK_DEBUG, finalApk)
             ))
@@ -148,7 +110,6 @@ class LightweightBuildEngine(
     fun cancelBuild() {
         isCancelled = true
         _state.value = BuildState.CANCELLED
-        // Further implementation would call cancel() on the active BuildProcess
     }
 
     private fun result(success: Boolean, msg: String, startTime: Long, artifacts: List<BuildArtifact> = emptyList()): BuildResult {

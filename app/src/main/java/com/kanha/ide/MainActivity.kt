@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.kanha.ide.build.tool.BuildToolsManagerImpl
+import com.kanha.ide.ui.build.BuildToolsSetupDialog
+import com.kanha.ide.ui.build.DownloadProgressDialog
 import com.kanha.ide.adapter.ProjectAdapter
 import com.kanha.ide.model.Project
-import com.kanha.ide.build.tool.SdkInstaller
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
@@ -37,9 +39,7 @@ class MainActivity : AppCompatActivity() {
         initViews()
         setupRecyclerView()
         
-        lifecycleScope.launch {
-            SdkInstaller(this@MainActivity).installSdkIfNeeded()
-        }
+        checkBuildToolsInstallation()
         
         loadSampleProjects()
         setupSearch()
@@ -96,6 +96,40 @@ class MainActivity : AppCompatActivity() {
         filteredProjects.clear()
         filteredProjects.addAll(allProjects)
         projectAdapter.notifyDataSetChanged()
+    }
+
+    private fun checkBuildToolsInstallation() {
+        val manager = BuildToolsManagerImpl(this)
+        if (!manager.isInstalled()) {
+            val dialog = BuildToolsSetupDialog()
+            dialog.onDownloadClicked = {
+                startBuildToolsDownload(manager)
+            }
+            dialog.show(supportFragmentManager, "BuildToolsSetup")
+        }
+    }
+
+    private fun startBuildToolsDownload(manager: BuildToolsManagerImpl) {
+        val progressDialog = DownloadProgressDialog()
+        progressDialog.show(supportFragmentManager, "DownloadProgress")
+        
+        // This is a placeholder for the actual download logic which would be moved to a ViewModel
+        // or a Service. For now, we simulate the Coroutine download call.
+        lifecycleScope.launch {
+            try {
+                manager.downloadAndInstall(
+                    com.kanha.ide.build.tool.BuildToolsConfig.DOWNLOAD_URL,
+                    com.kanha.ide.build.tool.BuildToolsConfig.EXPECTED_SHA256
+                ) { bytes, total, speed ->
+                    progressDialog.updateProgress(bytes, total, speed)
+                }
+                progressDialog.dismiss()
+                Toast.makeText(this@MainActivity, "Build Tools Installed Successfully!", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                progressDialog.dismiss()
+                Toast.makeText(this@MainActivity, "Setup Failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun setupSearch() {

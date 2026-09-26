@@ -4,17 +4,17 @@ import com.kanha.ide.build.core.BuildLogger
 import com.kanha.ide.build.model.BuildConfig
 import com.kanha.ide.build.model.BuildResult
 import com.kanha.ide.build.model.BuildState
-import com.kanha.ide.build.tool.SdkManager
+import com.kanha.ide.build.tool.BuildToolsManager
 import kotlinx.coroutines.flow.StateFlow
 
 class BuildManager(
-    private val sdkManager: SdkManager,
+    private val buildToolsManager: BuildToolsManager,
     val logger: BuildLogger
 ) {
     private var activeEngine: LightweightBuildEngine? = null
 
     suspend fun buildProject(config: BuildConfig): BuildResult {
-        val engine = LightweightBuildEngine(config, sdkManager, logger)
+        val engine = LightweightBuildEngine(config, buildToolsManager, logger)
         activeEngine = engine
         return engine.startBuild()
     }

@@ -3,16 +3,16 @@ package com.kanha.ide.build.compiler
 import com.kanha.ide.build.core.BuildLogger
 import com.kanha.ide.build.core.BuildProcess
 import com.kanha.ide.build.model.BuildConfig
-import com.kanha.ide.build.tool.SdkManager
+import com.kanha.ide.build.tool.BuildToolsManager
 import java.io.File
 
 class ApkSigner(
     private val config: BuildConfig,
-    private val sdkManager: SdkManager,
+    private val buildToolsManager: BuildToolsManager,
     private val logger: BuildLogger
 ) {
     suspend fun compile(): Boolean {
-        val apksigner = sdkManager.getApkSigner()
+        val apksigner = buildToolsManager.getApkSignerJar()
         if (apksigner == null || !apksigner.exists()) {
             logger.error("Required Android build tool is not installed: apksigner")
             return false
@@ -42,7 +42,8 @@ class ApkSigner(
         alignedApk.copyTo(finalApk, overwrite = true)
         
         val args = listOf(
-            apksigner.absolutePath,
+            "java",
+            "-jar", apksigner.absolutePath,
             "sign",
             "--ks", keystore.absolutePath,
             "--ks-pass", "pass:android",
