@@ -1,6 +1,8 @@
 package com.kanha.ide.ui.editor
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -88,6 +90,22 @@ class EditorActivity : AppCompatActivity() {
         }
     }
     
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_editor, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val fragment = supportFragmentManager.findFragmentById(R.id.editorContainer) as? EditorFragment
+        return when (item.itemId) {
+            R.id.action_undo -> { fragment?.undo(); true }
+            R.id.action_redo -> { fragment?.redo(); true }
+            R.id.action_save -> { fragment?.saveFile(); true }
+            R.id.action_search -> { fragment?.search(); true }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)

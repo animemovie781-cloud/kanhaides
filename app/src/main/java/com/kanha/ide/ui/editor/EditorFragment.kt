@@ -88,6 +88,23 @@ class EditorFragment : Fragment() {
         }
     }
     
+    fun undo() {
+        if (codeEditor.canUndo()) {
+            codeEditor.undo()
+        }
+    }
+
+    fun redo() {
+        if (codeEditor.canRedo()) {
+            codeEditor.redo()
+        }
+    }
+
+    fun search() {
+        // Search functionality can be expanded later using Sora Editor's Searcher API
+        Toast.makeText(context, "Search Panel (Coming soon in Phase 9)", Toast.LENGTH_SHORT).show()
+    }
+    
     // Future Phase: save file
     fun saveFile() {
         currentFilePath?.let { path ->
