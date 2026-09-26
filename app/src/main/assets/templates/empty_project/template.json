@@ -1,0 +1,11 @@
+{
+  "id": "empty_project",
+  "name": "Empty Project",
+  "description": "A completely empty Android project with no activities",
+  "category": "Basic",
+  "icon": "ic_android",
+  "languages": [
+    "kotlin",
+    "java"
+  ]
+}

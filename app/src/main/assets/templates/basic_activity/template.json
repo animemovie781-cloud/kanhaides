@@ -1,0 +1,11 @@
+{
+  "id": "basic_activity",
+  "name": "Basic Activity",
+  "description": "Android application with a basic activity layout",
+  "category": "Basic",
+  "icon": "ic_android",
+  "languages": [
+    "kotlin",
+    "java"
+  ]
+}

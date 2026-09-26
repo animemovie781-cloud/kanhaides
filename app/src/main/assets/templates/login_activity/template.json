@@ -1,0 +1,11 @@
+{
+  "id": "login_activity",
+  "name": "Login Activity",
+  "description": "Android application with a login screen",
+  "category": "Authentication",
+  "icon": "ic_android",
+  "languages": [
+    "kotlin",
+    "java"
+  ]
+}

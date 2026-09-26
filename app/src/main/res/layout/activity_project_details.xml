@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Project Details"
+            app:titleTextColor="@android:color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Application Name"
+                android:textColor="@color/accent_blue"
+                android:layout_marginBottom="4dp"/>
+            <EditText
+                android:id="@+id/etProjectName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="My Application"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:backgroundTint="@color/accent_blue"
+                android:singleLine="true"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Package Name"
+                android:textColor="@color/accent_blue"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"/>
+            <EditText
+                android:id="@+id/etPackageName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="com.example.myapplication"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:backgroundTint="@color/accent_blue"
+                android:singleLine="true"/>
+                
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Location"
+                android:textColor="@color/accent_blue"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"/>
+            <EditText
+                android:id="@+id/etLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="/storage/emulated/0/AndroidProjects/MyApplication"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:backgroundTint="@color/accent_blue"
+                android:singleLine="true"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Language"
+                android:textColor="@color/accent_blue"
+                android:layout_marginTop="16dp"/>
+            <RadioGroup
+                android:id="@+id/rgLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rbKotlin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kotlin"
+                    android:textColor="@android:color/white"
+                    android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/rbJava"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Java"
+                    android:textColor="@android:color/white"
+                    android:layout_marginStart="16dp"/>
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Minimum SDK"
+                android:textColor="@color/accent_blue"
+                android:layout_marginTop="16dp"/>
+            <Spinner
+                android:id="@+id/spMinSdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent_blue"
+                android:popupBackground="@color/surface_dark"/>
+                
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Target SDK"
+                android:textColor="@color/accent_blue"
+                android:layout_marginTop="16dp"/>
+            <Spinner
+                android:id="@+id/spTargetSdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent_blue"
+                android:popupBackground="@color/surface_dark"/>
+                
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Compile SDK"
+                android:textColor="@color/accent_blue"
+                android:layout_marginTop="16dp"/>
+            <Spinner
+                android:id="@+id/spCompileSdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent_blue"
+                android:popupBackground="@color/surface_dark"/>
+
+            <Button
+                android:id="@+id/btnGenerate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Create Project"
+                android:backgroundTint="@color/accent_blue"
+                android:textColor="@android:color/white"
+                android:padding="16dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

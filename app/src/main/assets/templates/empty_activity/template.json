@@ -1,0 +1,11 @@
+{
+  "id": "empty_activity",
+  "name": "Empty Activity",
+  "description": "A simple Android application",
+  "category": "Basic",
+  "icon": "ic_android",
+  "languages": [
+    "kotlin",
+    "java"
+  ]
+}

@@ -21,6 +21,16 @@
             </intent-filter>
         </activity>
 
+        <activity 
+            android:name=".ui.NewProjectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.KanhaIDE" />
+            
+        <activity 
+            android:name=".ui.ProjectDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.KanhaIDE" />
+
     </application>
 
 </manifest>

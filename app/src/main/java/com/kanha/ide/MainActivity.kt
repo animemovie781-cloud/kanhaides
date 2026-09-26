@@ -131,8 +131,7 @@ class MainActivity : AppCompatActivity() {
 
         // FAB - New project
         fabNewProject.setOnClickListener {
-            Toast.makeText(this, "Create New Project", Toast.LENGTH_SHORT).show()
-            // TODO: Navigate to new project creation screen
+            startActivity(android.content.Intent(this, com.kanha.ide.ui.NewProjectActivity::class.java))
         }
     }
 

@@ -1,0 +1,11 @@
+{
+  "id": "bottom_navigation",
+  "name": "Bottom Navigation",
+  "description": "Android application with bottom navigation tabs",
+  "category": "Navigation",
+  "icon": "ic_android",
+  "languages": [
+    "kotlin",
+    "java"
+  ]
+}
