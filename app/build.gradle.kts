@@ -23,6 +23,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -45,6 +46,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     
     // Sora Editor
     implementation("io.github.Rosemoe.sora-editor:editor:0.23.2")
