@@ -75,8 +75,7 @@ class FileExplorerFragment : Fragment(), FileExplorerListener {
     }
 
     override fun onFileClick(node: FileNode) {
-        Toast.makeText(context, "Clicked: ${node.name}", Toast.LENGTH_SHORT).show()
-        // TODO: Pass to EditorManager / CodeEditorView in Phase 6
+        (activity as? com.kanha.ide.ui.editor.EditorActivity)?.openFile(node.path)
     }
 
     override fun onFolderClick(node: FileNode, position: Int) {

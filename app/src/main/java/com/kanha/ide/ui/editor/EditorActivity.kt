@@ -47,4 +47,16 @@ class EditorActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+    
+    fun openFile(filePath: String) {
+        val editorFragment = EditorFragment.newInstance(filePath)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.editorContainer, editorFragment)
+            .commit()
+            
+        // Optionally close the drawer when a file is opened on smaller screens
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+    }
 }
