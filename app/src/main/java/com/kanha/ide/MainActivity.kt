@@ -39,6 +39,12 @@ class MainActivity : AppCompatActivity() {
         setupBottomNavigation()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Refresh project list when returning to this screen
+        loadSampleProjects()
+    }
+
     private fun initViews() {
         rvProjects = findViewById(R.id.rvProjects)
         etSearch = findViewById(R.id.etSearch)

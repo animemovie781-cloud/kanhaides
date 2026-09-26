@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
-import com.kanha.ide.MainActivity
 import com.kanha.ide.R
 import com.kanha.ide.project.ProjectConfig
 import com.kanha.ide.project.ProjectGenerator
@@ -116,10 +115,10 @@ class ProjectDetailsActivity : AppCompatActivity() {
 
                 if (result.isSuccess) {
                     Toast.makeText(this@ProjectDetailsActivity, "Project created successfully!", Toast.LENGTH_LONG).show()
-                    // Open main activity and maybe pass the new project path to open it
-                    val intent = Intent(this@ProjectDetailsActivity, MainActivity::class.java).apply {
+                    // Open EditorActivity directly
+                    val intent = Intent(this@ProjectDetailsActivity, com.kanha.ide.ui.editor.EditorActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra("OPEN_PROJECT_PATH", projectPath)
+                        putExtra("PROJECT_PATH", projectPath)
                     }
                     startActivity(intent)
                     finish()
