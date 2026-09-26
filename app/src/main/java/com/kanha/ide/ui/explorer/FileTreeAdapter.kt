@@ -57,8 +57,8 @@ class FileTreeAdapter(
             }
         }
 
-        holder.itemView.setOnLongClickListener {
-            listener.onFileLongClick(node, it)
+        holder.itemView.setOnLongClickListener { v ->
+            listener.onFileLongClick(node, v)
             true
         }
     }

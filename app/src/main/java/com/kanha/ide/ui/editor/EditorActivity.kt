@@ -1,7 +1,6 @@
 package com.kanha.ide.ui.editor
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,11 +17,13 @@ class EditorActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var rvEditorTabs: RecyclerView
     private lateinit var tabAdapter: EditorTabAdapter
-    private val viewModel: EditorViewModel by viewModels()
+    private lateinit var viewModel: EditorViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editor)
+
+        viewModel = androidx.lifecycle.ViewModelProvider(this)[EditorViewModel::class.java]
 
         val projectPath = intent.getStringExtra("PROJECT_PATH") ?: return finish()
 
