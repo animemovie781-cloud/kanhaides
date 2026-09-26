@@ -20,6 +20,18 @@
             app:titleTextColor="@color/text_primary"
             app:navigationIcon="@drawable/ic_menu" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvEditorTabs"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/background_dark"
+            android:orientation="horizontal" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_dark"/>
+
         <FrameLayout
             android:id="@+id/editorContainer"
             android:layout_width="match_parent"

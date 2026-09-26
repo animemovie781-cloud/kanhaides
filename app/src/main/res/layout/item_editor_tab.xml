@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="12dp"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/tvTabName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MainActivity.kt"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:maxWidth="160dp"
+        android:singleLine="true"
+        android:ellipsize="middle"/>
+
+    <TextView
+        android:id="@+id/tvModifiedIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="*"
+        android:textColor="@color/accent_blue_light"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:layout_marginStart="4dp"/>
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_close"
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="@color/text_secondary"
+        xmlns:app="http://schemas.android.com/apk/res-auto"/>
+
+</LinearLayout>

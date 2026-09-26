@@ -1,15 +1,24 @@
 package com.kanha.ide.ui.editor
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kanha.ide.R
 import com.kanha.ide.ui.explorer.FileExplorerFragment
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class EditorActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var rvEditorTabs: RecyclerView
+    private lateinit var tabAdapter: EditorTabAdapter
+    private val viewModel: EditorViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +27,8 @@ class EditorActivity : AppCompatActivity() {
         val projectPath = intent.getStringExtra("PROJECT_PATH") ?: return finish()
 
         drawerLayout = findViewById(R.id.drawerLayout)
+        rvEditorTabs = findViewById(R.id.rvEditorTabs)
+        
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.editorToolbar)
         
         setSupportActionBar(toolbar)
@@ -32,11 +43,47 @@ class EditorActivity : AppCompatActivity() {
         // Open the drawer by default to show the project structure
         drawerLayout.openDrawer(GravityCompat.START)
 
+        setupTabs()
+
         if (savedInstanceState == null) {
             val explorerFragment = FileExplorerFragment.newInstance(projectPath)
             supportFragmentManager.beginTransaction()
                 .replace(R.id.explorerContainer, explorerFragment)
                 .commit()
+        }
+    }
+    
+    private fun setupTabs() {
+        tabAdapter = EditorTabAdapter(
+            onTabClick = { tab -> viewModel.openFile(tab.filePath) },
+            onCloseClick = { tab -> viewModel.closeFile(tab.filePath) }
+        )
+        rvEditorTabs.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvEditorTabs.adapter = tabAdapter
+
+        lifecycleScope.launch {
+            viewModel.tabs.collectLatest { tabs ->
+                tabAdapter.submitTabs(tabs)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.activeTabPath.collectLatest { path ->
+                if (path != null) {
+                    val editorFragment = EditorFragment.newInstance(path)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.editorContainer, editorFragment)
+                        .commit()
+                } else {
+                    // Show empty placeholder or clear container
+                    val fragment = supportFragmentManager.findFragmentById(R.id.editorContainer)
+                    if (fragment != null) {
+                        supportFragmentManager.beginTransaction()
+                            .remove(fragment)
+                            .commit()
+                    }
+                }
+            }
         }
     }
     
@@ -49,10 +96,7 @@ class EditorActivity : AppCompatActivity() {
     }
     
     fun openFile(filePath: String) {
-        val editorFragment = EditorFragment.newInstance(filePath)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.editorContainer, editorFragment)
-            .commit()
+        viewModel.openFile(filePath)
             
         // Optionally close the drawer when a file is opened on smaller screens
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
