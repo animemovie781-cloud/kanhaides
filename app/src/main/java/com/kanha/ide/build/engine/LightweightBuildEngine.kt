@@ -71,8 +71,13 @@ class LightweightBuildEngine(
                 _state.value = BuildState.SUCCESS
                 logger.log("BUILD SUCCESSFUL (SIMULATED)")
                 
-                // Return a dummy artifact
-                val dummyApk = File(config.projectRoot, "build/outputs/apk/app-debug-simulated.apk")
+                // Create a dummy APK file so the UI can find it for testing the install flow
+                val dummyApk = File(config.projectRoot, "build/outputs/apk/app-debug.apk")
+                dummyApk.parentFile?.mkdirs()
+                if (!dummyApk.exists()) {
+                    dummyApk.writeText("Dummy simulated APK content")
+                }
+                
                 return@withContext result(true, "Simulated build successful", startTime, listOf(
                     BuildArtifact(com.kanha.ide.build.model.ArtifactType.APK_DEBUG, dummyApk)
                 ))

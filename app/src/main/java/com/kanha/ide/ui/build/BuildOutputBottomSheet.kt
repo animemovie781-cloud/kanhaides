@@ -65,6 +65,9 @@ class BuildOutputBottomSheet : BottomSheetDialogFragment() {
         btnInstall.setOnClickListener {
             val apkPath = File(projectPath, "build/outputs/apk/app-debug.apk")
             if (apkPath.exists()) {
+                if (apkPath.length() < 100) {
+                    Toast.makeText(context, "Testing install flow with Fake APK", Toast.LENGTH_SHORT).show()
+                }
                 installApk(apkPath)
             } else {
                 Toast.makeText(context, "APK not found", Toast.LENGTH_SHORT).show()
