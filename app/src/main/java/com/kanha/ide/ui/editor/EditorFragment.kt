@@ -56,7 +56,7 @@ class EditorFragment : Fragment() {
         colorScheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, android.graphics.Color.parseColor("#121212"))
         colorScheme.setColor(EditorColorScheme.TEXT_NORMAL, android.graphics.Color.parseColor("#E0E0E0"))
         colorScheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, android.graphics.Color.parseColor("#1E1E1E"))
-        colorScheme.setColor(EditorColorScheme.LINE_NUMBER_NORMAL, android.graphics.Color.parseColor("#808080"))
+        colorScheme.setColor(EditorColorScheme.LINE_NUMBER_PANEL_TEXT, android.graphics.Color.parseColor("#808080"))
         colorScheme.setColor(EditorColorScheme.SELECTION_INSERT, android.graphics.Color.parseColor("#1F6FEB"))
         colorScheme.setColor(EditorColorScheme.SELECTION_HANDLE, android.graphics.Color.parseColor("#1F6FEB"))
         

@@ -64,4 +64,9 @@ class FileTreeAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    inner class FileViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvFileName: TextView = view.findViewById(R.id.tvFileName)
+        val ivIcon: ImageView = view.findViewById(R.id.ivIcon)
+    }
 }
