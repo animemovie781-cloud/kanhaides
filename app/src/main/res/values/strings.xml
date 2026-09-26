@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KanhaIDE</string>
+    <string name="search_hint">Search for projects...</string>
+    <string name="restore_projects">Restore Projects</string>
+    <string name="restore_desc">Get your projects in a couple of clicks</string>
+    <string name="projects">Projects</string>
+    <string name="new_project">New project</string>
+    <string name="tab_projects">Projects</string>
+    <string name="tab_store">Store</string>
+</resources>

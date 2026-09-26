@@ -1,0 +1,190 @@
+package com.kanha.ide
+
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.PopupMenu
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.kanha.ide.adapter.ProjectAdapter
+import com.kanha.ide.model.Project
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var rvProjects: RecyclerView
+    private lateinit var projectAdapter: ProjectAdapter
+    private lateinit var etSearch: EditText
+    private lateinit var fabNewProject: ExtendedFloatingActionButton
+    private lateinit var bottomNavigation: BottomNavigationView
+
+    private val allProjects = mutableListOf<Project>()
+    private val filteredProjects = mutableListOf<Project>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        initViews()
+        setupRecyclerView()
+        loadSampleProjects()
+        setupSearch()
+        setupClickListeners()
+        setupBottomNavigation()
+    }
+
+    private fun initViews() {
+        rvProjects = findViewById(R.id.rvProjects)
+        etSearch = findViewById(R.id.etSearch)
+        fabNewProject = findViewById(R.id.fabNewProject)
+        bottomNavigation = findViewById(R.id.bottomNavigation)
+    }
+
+    private fun setupRecyclerView() {
+        projectAdapter = ProjectAdapter(
+            filteredProjects,
+            onItemClick = { project ->
+                Toast.makeText(this, "Opening ${project.name}...", Toast.LENGTH_SHORT).show()
+                // TODO: Navigate to project editor
+            },
+            onDropdownClick = { project, view ->
+                showProjectOptionsMenu(project, view)
+            }
+        )
+
+        rvProjects.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = projectAdapter
+            setHasFixedSize(false)
+        }
+    }
+
+    private fun loadSampleProjects() {
+        allProjects.addAll(
+            listOf(
+                Project(1, "kanha", "NewProject23", "1.0", 1, "com.my.newproject23", 790),
+                Project(2, "jc", "NewProject22", "1.0", 1, "com.my.newproject22", 789),
+                Project(3, "new", "NewProject21", "1.0", 1, "com.my.newproject21", 788),
+                Project(4, "kanha", "NewProject19", "1.0", 1, "com.my.newproject19", 787),
+                Project(5, "kanah", "NewProject18", "1.0", 1, "com.my.newproject18", 786),
+                Project(6, "Ystudio", "YstudioProject", "1.0", 1, "com.yuvextech.Ystudio", 785),
+                Project(7, "TestApp", "NewProject17", "1.0", 1, "com.my.newproject17", 784),
+                Project(8, "MyGame", "GameProject01", "2.0", 3, "com.my.gameproject01", 783),
+            )
+        )
+
+        filteredProjects.addAll(allProjects)
+        projectAdapter.notifyDataSetChanged()
+    }
+
+    private fun setupSearch() {
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString().lowercase().trim()
+                filteredProjects.clear()
+                if (query.isEmpty()) {
+                    filteredProjects.addAll(allProjects)
+                } else {
+                    filteredProjects.addAll(
+                        allProjects.filter {
+                            it.name.lowercase().contains(query) ||
+                            it.packageName.lowercase().contains(query) ||
+                            it.projectName.lowercase().contains(query)
+                        }
+                    )
+                }
+                projectAdapter.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun setupClickListeners() {
+        // Hamburger menu
+        findViewById<ImageButton>(R.id.btnMenu).setOnClickListener {
+            Toast.makeText(this, "Menu clicked", Toast.LENGTH_SHORT).show()
+            // TODO: Open drawer navigation
+        }
+
+        // Search icon
+        findViewById<ImageButton>(R.id.btnSearch).setOnClickListener {
+            etSearch.requestFocus()
+        }
+
+        // Sort button
+        findViewById<ImageButton>(R.id.btnSort).setOnClickListener {
+            sortProjectsAlphabetically()
+        }
+
+        // Restore projects card
+        findViewById<View>(R.id.restoreProjectsCard).setOnClickListener {
+            Toast.makeText(this, "Restore Projects", Toast.LENGTH_SHORT).show()
+            // TODO: Navigate to restore screen
+        }
+
+        // FAB - New project
+        fabNewProject.setOnClickListener {
+            Toast.makeText(this, "Create New Project", Toast.LENGTH_SHORT).show()
+            // TODO: Navigate to new project creation screen
+        }
+    }
+
+    private fun setupBottomNavigation() {
+        bottomNavigation.selectedItemId = R.id.nav_projects
+
+        bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_projects -> {
+                    // Already on projects tab
+                    true
+                }
+                R.id.nav_store -> {
+                    Toast.makeText(this, "Store coming soon!", Toast.LENGTH_SHORT).show()
+                    // TODO: Navigate to store
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private var isSortedAZ = false
+
+    private fun sortProjectsAlphabetically() {
+        if (isSortedAZ) {
+            filteredProjects.sortByDescending { it.name.lowercase() }
+        } else {
+            filteredProjects.sortBy { it.name.lowercase() }
+        }
+        isSortedAZ = !isSortedAZ
+        projectAdapter.notifyDataSetChanged()
+    }
+
+    private fun showProjectOptionsMenu(project: Project, anchor: View) {
+        val popup = PopupMenu(this, anchor)
+        popup.menu.add("Open")
+        popup.menu.add("Rename")
+        popup.menu.add("Delete")
+        popup.menu.add("Export")
+        popup.menu.add("Properties")
+
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.title) {
+                "Open" -> Toast.makeText(this, "Opening ${project.name}", Toast.LENGTH_SHORT).show()
+                "Rename" -> Toast.makeText(this, "Rename ${project.name}", Toast.LENGTH_SHORT).show()
+                "Delete" -> Toast.makeText(this, "Delete ${project.name}", Toast.LENGTH_SHORT).show()
+                "Export" -> Toast.makeText(this, "Export ${project.name}", Toast.LENGTH_SHORT).show()
+                "Properties" -> Toast.makeText(this, "Properties of ${project.name}", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+        popup.show()
+    }
+}
