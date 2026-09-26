@@ -18,13 +18,21 @@ class FileExplorerViewModel : ViewModel() {
     val fileTree: StateFlow<List<FileNode>> = _fileTree.asStateFlow()
     
     private val rootNodes = mutableListOf<FileNode>()
+    
+    var isLoaded = false
+        private set
 
     fun initProjectRoot(path: String) {
         repository = FileRepository(path)
         viewModelScope.launch {
             val children = repository.listChildren(File(path), 0)
             rootNodes.clear()
-            rootNodes.addAll(children)
+            if (children.isEmpty()) {
+                rootNodes.add(FileNode(File(path, "[Empty: $path]"), depth = 0))
+            } else {
+                rootNodes.addAll(children)
+            }
+            isLoaded = true
             _fileTree.value = rootNodes.toList()
         }
     }

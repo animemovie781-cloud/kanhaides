@@ -69,6 +69,9 @@ class FileExplorerFragment : Fragment(), FileExplorerListener {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.fileTree.collectLatest { fileNodes ->
+                if (fileNodes.isEmpty() && viewModel.isLoaded) {
+                    Toast.makeText(context, "No files found in project", Toast.LENGTH_SHORT).show()
+                }
                 adapter.submitList(fileNodes)
             }
         }
