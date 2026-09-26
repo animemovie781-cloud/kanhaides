@@ -15,6 +15,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.kanha.ide.adapter.ProjectAdapter
 import com.kanha.ide.model.Project
+import com.kanha.ide.build.tool.SdkInstaller
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +36,11 @@ class MainActivity : AppCompatActivity() {
 
         initViews()
         setupRecyclerView()
+        
+        lifecycleScope.launch {
+            SdkInstaller(this@MainActivity).installSdkIfNeeded()
+        }
+        
         loadSampleProjects()
         setupSearch()
         setupClickListeners()

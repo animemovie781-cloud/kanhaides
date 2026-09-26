@@ -1,6 +1,7 @@
 package com.kanha.ide.ui.build
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kanha.ide.build.core.BuildLogger
 import com.kanha.ide.build.engine.BuildManager
@@ -14,8 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-class BuildViewModel : ViewModel() {
-    private val sdkManager = SdkManager()
+class BuildViewModel(application: Application) : AndroidViewModel(application) {
+    private val sdkManager = SdkManager(application.filesDir.absolutePath + "/sdk")
     private val buildLogger = BuildLogger()
     private val buildManager = BuildManager(sdkManager, buildLogger)
 
